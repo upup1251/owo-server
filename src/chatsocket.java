@@ -12,27 +12,35 @@ public class chatsocket  extends Thread{
         owo_no = owo_no1;
     }
     public void run(){
-        //while (true) {
-            getMessage();
-        //}
+            try {
+                while (true) {
+                    getMessage();
+                }
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 
     }
-    public void getMessage(){
+    public void getMessage() throws InterruptedException{
         try{
-            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-            Object receivedobject = ois.readObject();
-            message messageGetted = (message)receivedobject;
-            if(SeverListening.online_socker_list.containsKey(messageGetted.getAccepter())){
-                chatsocket socket_target = SeverListening.online_socker_list.get(messageGetted.getAccepter());
-                socket_target.sendMessage(1, messageGetted.getSender(), messageGetted.getMessage());
-            }
-            else{
-                sendMessage(2, "00000", "the target usr is not online");
-            }
-            //sendMessage(1,messageGetted.getAccepter(),messageGetted.getMessage());
+            if(socket.getInputStream().available()>0){
+                ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+                Object receivedobject = ois.readObject();
+                message messageGetted = (message)receivedobject;
+                if(SeverListening.online_socker_list.containsKey(messageGetted.getAccepter())){
+                    chatsocket socket_target = SeverListening.online_socker_list.get(messageGetted.getAccepter());
+                    socket_target.sendMessage(1, messageGetted.getSender(), messageGetted.getMessage());
+                }
+                else{
+                    sendMessage(2, "00000", "the target usr is not online");
+                }
+                //sendMessage(1,messageGetted.getAccepter(),messageGetted.getMessage());
+        }
         }
         catch(Exception e){
             e.printStackTrace();
+            sleep(4000);
         }
     }
     public void sendMessage(int type,String sender,String message){
