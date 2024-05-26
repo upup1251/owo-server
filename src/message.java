@@ -1,4 +1,5 @@
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 public class message implements Serializable{
     private int type;
@@ -8,11 +9,13 @@ public class message implements Serializable{
     private String sender;
     private String accepter;
     private String message;
+    private Timestamp date;
     message(){
         type = -1;
         sender = accepter = message = null;
     };
     message(int type1,String sender1,String accepter1,String message1){
+        date = new Timestamp(System.currentTimeMillis());
         type = type1;
         sender = sender1;
         accepter = accepter1;
@@ -29,5 +32,8 @@ public class message implements Serializable{
     }
     public String getMessage(){
         return message;
+    }
+    public Timestamp getTime(){
+        return date;
     }
 }

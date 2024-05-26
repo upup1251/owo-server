@@ -8,9 +8,11 @@ public class SeverListening  extends Thread{
     private ServerSocket serverSocket;
     private int DuanKouHao = 40801;
     public static Map<String,chatsocket> online_socker_list = new HashMap<>();
+    public static connectToSql sqls;
     SeverListening(){}
     public void run() {
         try{
+            sqls = new connectToSql();
         serverSocket = new ServerSocket(DuanKouHao);
         }
         catch(Exception e){
@@ -32,7 +34,7 @@ public class SeverListening  extends Thread{
                 message messageGetted = (message)receivedobject;
                 chatsocket chatsocket = new chatsocket(socket,messageGetted.getMessage());
                 online_socker_list.put(messageGetted.getSender(),chatsocket);
-               System.out.println("getConnection from "+socket.getInetAddress()+" with owo_no:"+messageGetted.getMessage());
+               System.out.println("getConnection from "+socket.getInetAddress()+" with owo_no:"+messageGetted.getMessage()+" current online user is "+online_socker_list.size());
 
                 chatsocket.start();
             }
